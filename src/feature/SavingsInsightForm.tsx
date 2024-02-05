@@ -11,6 +11,7 @@ import { getAccountGroups, getSavingsAccount } from "../service/apiCall";
 const SavingsInsightForm = () => {
   const [accountGroup, setAccountGroup] = useState<any>([]);
   const [savingsAccount, setSavingsAccount] = useState<string>("");
+  console.log(savingsAccount)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
