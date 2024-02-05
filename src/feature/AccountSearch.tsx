@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import falskeKontoData from "../mockData/mockAccountsData";
-import { KontoData } from "../interfaces/iKontoData";
 
 const AccountSearch = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<KontoData[]>([]);
+  const [searchResults, setSearchResults] = useState<IKontoData[]>([]);
 
   const handleSearch = () => {
-    const results = falskeKontoData.filter((account) =>
+    const results = IKontoData.filter((account) =>
       account.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -6,16 +6,26 @@ import {
   Typography,
   Autocomplete,
 } from "@mui/material";
-import { getAccountGroups } from "../service/apiCall";
+import { getAccountGroups, getSavingsAccount } from "../service/apiCall";
 
 const SavingsInsightForm = () => {
-  const [accountGroup, setAccountGroup] = React.useState<any>([]);
+  const [accountGroup, setAccountGroup] = useState<string[]>([]);
+  const [savingsAccount, setSavingsAccount] = useState<string>("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   console.log("Form submitted");
 
-    console.log("Form submitted");
-  };
+  //   try {
+  //     const savingsAccountData = await getSavingsAccount();
+  //     setSavingsAccount(savingsAccountData);
+  //   } catch (error) {
+  //     console.error("Error fetching savings account:", error);
+  //   }
+
+  //   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     setUserInput(event.target.value);
+  //   };
 
   useEffect(() => {
     fetchGroups();
@@ -24,10 +34,10 @@ const SavingsInsightForm = () => {
       const response = await getAccountGroups();
       if (response?.success) setAccountGroup(response?.data || []);
     }
-  },[]);
+  }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <Box
         sx={{
           "& .MuiTextField-root": { m: 1, width: "90ch" },
@@ -45,6 +55,8 @@ const SavingsInsightForm = () => {
           label="Nåværende bank"
           variant="outlined"
           fullWidth
+          // value={userInput}
+          // onChange={handleInputChange}
           required
         />
         <TextField

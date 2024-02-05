@@ -1,12 +1,12 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
-import { KontoData } from "../interfaces/iKontoData";
+import { IKontodata } from "../interfaces/iKontoData";
 
-interface Props {
-  account: KontoData;
+interface AccountDetailsProps {
+  account: IKontodata;
 }
 
-const AccountDetails: React.FC<Props> = ({ account }) => {
+const AccountDetails: React.FC<AccountDetailsProps> = ({ account }) => {
   if (!account)
     return (
       <>
@@ -19,9 +19,9 @@ const AccountDetails: React.FC<Props> = ({ account }) => {
       <Typography variant="h4">{account.title}</Typography>
       <Typography variant="subtitle1">Bank Provider: {account.navn}</Typography>
       <Typography>Account Type: {account.leverandor}</Typography>
-      <Typography variant="h6">Minimum Amount: {account.minBelop}</Typography>
-      <Typography>Maximum Amount: {account.maksBelop}</Typography>
-      <Typography>Interest Rate: {account.rentesatser}</Typography>
+      <Typography variant="h6">Minimum Amount: {account.min_belop}</Typography>
+      <Typography>Maximum Amount: {account.maks_belop}</Typography>
+      <Typography>Interest Rate: {account.rentesats1}</Typography>
 
       <Typography>Free Withdrawals: {account.frie_uttak}</Typography>
       <Typography>Withdrawal Fee: {account.kap_periode}</Typography>
@@ -35,7 +35,7 @@ const AccountDetails: React.FC<Props> = ({ account }) => {
       </Typography>
       <Typography>Key Period: {account.kap_periode}</Typography>
       <Typography>
-        Special Conditions: {account.spesielleBetingelser}
+        Special Conditions: {account.spesielle_betingelser}
       </Typography>
     </Box>
   );
