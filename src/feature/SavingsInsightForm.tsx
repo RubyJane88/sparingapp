@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -9,24 +9,22 @@ import {
 import { getAccountGroups, getSavingsAccount } from "../service/apiCall";
 
 const SavingsInsightForm = () => {
-  const [accountGroup, setAccountGroup] = useState<string[]>([]);
+  const [accountGroup, setAccountGroup] = useState<any>([]);
   const [savingsAccount, setSavingsAccount] = useState<string>("");
 
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   console.log("Form submitted");
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("Form submitted");
 
-  //   try {
-  //     const savingsAccountData = await getSavingsAccount();
-  //     setSavingsAccount(savingsAccountData);
-  //   } catch (error) {
-  //     console.error("Error fetching savings account:", error);
-  //   }
+    try {
+      const savingsAccountData = await getSavingsAccount();
+      setSavingsAccount(savingsAccountData);
+    } catch (error) {
+      console.error("Error fetching savings account:", error);
+    }
 
-  //   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //     setUserInput(event.target.value);
-  //   };
 
+  
   useEffect(() => {
     fetchGroups();
 
@@ -36,8 +34,9 @@ const SavingsInsightForm = () => {
     }
   }, []);
 
+}
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Box
         sx={{
           "& .MuiTextField-root": { m: 1, width: "90ch" },
@@ -55,8 +54,6 @@ const SavingsInsightForm = () => {
           label="Nåværende bank"
           variant="outlined"
           fullWidth
-          // value={userInput}
-          // onChange={handleInputChange}
           required
         />
         <TextField
@@ -168,4 +165,5 @@ const SavingsInsightForm = () => {
   );
 };
 
-export default SavingsInsightForm;
+
+export default SavingsInsightForm

@@ -1,6 +1,4 @@
 import { Grid } from "@mui/material";
-
-import AccountTypeForm from "./AccountTypeForm";
 import SavingsInsightForm from "../SavingsInsightForm";
 
 const Bot = () => {
@@ -9,11 +7,11 @@ const Bot = () => {
       <Grid item lg={9} md={8} xs={12}>
         <SavingsInsightForm />
       </Grid>
-      <AccountTypeForm />
+      {/* <AccountTypeForm /> */}
       <Grid item lg={3} md={4} xs={12}></Grid>
 
       <Grid item lg={3} md={4} xs={12}>
-        History Box goes here fgrGF
+     
       </Grid>
     </Grid>
   );
