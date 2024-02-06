@@ -1,18 +1,19 @@
-import { Grid } from "@mui/material";
-import SavingsInsightForm from "../SavingsInsightForm";
+import React, { useState } from 'react';
+import { Grid } from '@mui/material';
 
-const Bot = () => {
+import AccountList from './AccountList'; 
+import SavingsInsightForm from '../SavingsInsightForm';
+
+const Bot: React.FC = () => {
+  const [recommended, setRecommended] = useState<any[]>([]); 
+
   return (
     <Grid container spacing={2}>
       <Grid item lg={9} md={8} xs={12}>
-        <SavingsInsightForm />
+        <SavingsInsightForm setRecommended={setRecommended} />
+        <AccountList recommended={recommended} />
       </Grid>
-      {/* <AccountTypeForm /> */}
-      <Grid item lg={3} md={4} xs={12}></Grid>
 
-      <Grid item lg={3} md={4} xs={12}>
-     
-      </Grid>
     </Grid>
   );
 };

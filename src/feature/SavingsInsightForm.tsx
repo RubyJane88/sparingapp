@@ -6,37 +6,92 @@ import {
   Typography,
   Autocomplete,
 } from "@mui/material";
-import { getAccountGroups, getSavingsAccount } from "../service/apiCall";
+import { getAccountGroups, getSavingsRecommendation } from "../service/apiCall";
 
-const SavingsInsightForm = () => {
-  const [accountGroup, setAccountGroup] = useState<any>([]);
-  const [savingsAccount, setSavingsAccount] = useState<string>("");
-  console.log(savingsAccount)
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log("Form submitted");
-
-    try {
-      const savingsAccountData = await getSavingsAccount();
-      setSavingsAccount(savingsAccountData);
-    } catch (error) {
-      console.error("Error fetching savings account:", error);
-    }
-
-
-  
-  useEffect(() => {
-    fetchGroups();
-
-    async function fetchGroups() {
-      const response = await getAccountGroups();
-      if (response?.success) setAccountGroup(response?.data || []);
-    }
-  }, []);
+interface SavingsAccountProps {
+  title: string;
+  link: string;
+  id: string;
+  updated: string;
+  f_navn: string;
+  f_leverandor: string;
+  f_leverandor_tekst: string;
+  f_produktpakke: string;
+  f_produktpakke_tekst: string;
+  f_frie_uttak: number;
+  f_grensebelop1: number | string; // Adjusted based on your JSON, could be either a number or an empty string
+  f_gruppe: string;
+  f_highestEntryFee: number;
+  f_kap_periode: number;
+  f_maks_alder: number;
+  f_markedsomraade: string;
+  f_markedsomraadeTekst: string;
+  f_maks_belop: number;
+  f_min_alder: number;
+  f_min_belop: number;
+  f_rentesats1: number;
+  f_spesielle_betingelser: string;
 
 }
+
+type Props = {
+  setRecommended: (data: any) => void
+}
+
+const SavingsInsightForm = (props: Props) => {
+  const { setRecommended } = { ...props }
+
+  const [accountType, setAccountType] = useState<any>(null)
+  const [accountGroups, setAccountGroups] = useState<string[]>([]);
+  const [savingsAccount] = useState<SavingsAccountProps[]>([]);
+  const [interestRateMin, setInterestMin] = useState("");
+  const [interestRateMax, setInterestMax] = useState("");
+  const [minDepositAmount, setMinDepositAmount] = useState("");
+  const [maxDepositAmount, setMaxDepositAmount] = useState("");
+  const [freeWithdrawal, setFreeWithdrawal] = useState("");
+  const [currentSavings, setCurrentSavings] = useState("");
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+    event.preventDefault();
+    try {
+      const payload = { accountType, minDepositAmount, maxDepositAmount, freeWithdrawal, interestRateMax, interestRateMin, currentSavings }
+      const response = await getSavingsRecommendation(payload);
+      setRecommended(response?.data || [])
+      if (!response?.success) {
+        alert("No recommendations found")
+        return
+      }
+
+    } catch (error) {
+      console.error("Error fetching savings account data:", error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const response = await getAccountGroups();
+        if (response?.success) {
+          setAccountGroups(response.data || []);
+        } else {
+          console.error("Failed to fetch account groups: No success flag");
+        }
+      } catch (error) {
+        console.error("Error fetching account groups:", error);
+      }
+    };
+    fetchGroups();
+  }, []);
+
+  console.log("Ready to render savingsAccount:", savingsAccount);
+
+
   return (
+
     <form onSubmit={handleSubmit}>
       <Box
         sx={{
@@ -47,124 +102,94 @@ const SavingsInsightForm = () => {
           margin: "0 auto",
         }}>
         <Typography variant="h5" margin="2rem" sx={{ color: "secondary.main" }}>
-          Find out if switching to a new savings account is right for you
+          <h4>Find out if switching to a new savings account is right for you</h4>
         </Typography>
 
-        <Typography variant="h6">Current Bank and Account Type</Typography>
-        <TextField
-          label="Nåværende bank"
-          variant="outlined"
-          fullWidth
-          required
-        />
-        <TextField
-          label="Type sparekonto du har?"
-          variant="outlined"
-          fullWidth
-          required
-        />
+        <Typography>Select your Savings Account Type </Typography>
+
         <Autocomplete
           disablePortal
-          id="combo-box-demo"
-          options={accountGroup}
-          renderInput={(params) => (
-            <TextField {...params} label="Account type" />
-          )}
+          id="account-group-autocomplete"
+          options={accountGroups}
+          value={accountType}
+          onChange={( newValue) => setAccountType(newValue)}
+          renderInput={(params) => <TextField {...params} label="Account type" />}
+        />
+        <TextField
+          label="What is current interest rate from your bank?"
+          type="number"
+          variant="outlined"
+          fullWidth
+          required
+          value={interestRateMin}
+          onChange={(e) => { setInterestMin(e.target.value) }}
+        />
+        <TextField
+          label="Maximum Interest Rates"
+          type="number"
+          variant="outlined"
+          fullWidth
+          required
+          value={interestRateMax}
+          onChange={(e) => { setInterestMax(e.target.value) }}
+        />
+        <TextField
+          label="Minimum deposit amount"
+          type="number"
+          variant="outlined"
+          fullWidth
+          required
+          value={minDepositAmount}
+          onChange={(e) => { setMinDepositAmount(e.target.value) }}
         />
 
-        <Typography variant="h6">Current Account Features</Typography>
         <TextField
-          label="Din nåværende rentesats"
+          label="Maximum deposit amount"
+          type="number"
           variant="outlined"
           fullWidth
+          required
+          value={maxDepositAmount}
+          onChange={(e) => { setMaxDepositAmount(e.target.value) }}
         />
         <TextField
-          label="Antall frie uttak per måned"
+          label="How many free withdrawals do you have now?"
+          type="number"
           variant="outlined"
           fullWidth
-        />
-        <TextField
-          label="Spesielle betingelser for din konto"
-          variant="outlined"
-          fullWidth
-        />
-
-        <Typography variant="h6">Financial Activity</Typography>
-        <TextField
-          label="Gjennomsnittlig kontobalanse"
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Hvor ofte tar du ut penger?"
-          variant="outlined"
-          fullWidth
+          required
+          value={freeWithdrawal}
+          onChange={(e) => { setFreeWithdrawal(e.target.value) }}
         />
 
-        <Typography variant="h6">Savings Goals</Typography>
+        <Typography variant="h6" sx={{ marginTop: 2 }}>Current Savings</Typography>
         <TextField
-          label="Ditt primære mål med sparekontoen"
+          label="Estimate Current Savings"
+          type="number"
           variant="outlined"
           fullWidth
-        />
-        <TextField
-          label="Er du interessert i kontoer med spesifikke funksjoner eller fordeler?"
-          variant="outlined"
-          fullWidth
-        />
-
-        <Typography variant="h6">Additional Services</Typography>
-        <TextField
-          label="Bruker du tilleggstjenester med din nåværende konto?"
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Ser du etter lignende tjenester i en ny konto?"
-          variant="outlined"
-          fullWidth
+          required
+          value={currentSavings}
+          onChange={(e) => { setCurrentSavings(e.target.value) }}
         />
 
-        <Typography variant="h6">Preferences for new account</Typography>
-        <TextField
-          label="Minimumsrente du ser etter i en ny sparekonto"
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Minimum og maksimum kontobalanse du vurderer for din nye sparekonto"
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Hvor viktig er frie uttak for deg på en skala fra 1 til 10?"
-          variant="outlined"
-          fullWidth
-        />
-
-        <Typography variant="h6">Switching preferences</Typography>
-        <TextField
-          label="Hvor sannsynlig er det at du bytter til en ny bank hvis den tilbyr bedre renter eller vilkår?"
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Er det noen deal-breakers for deg når du vurderer en ny sparekonto?"
-          variant="outlined"
-          fullWidth
-        />
 
         <Button
           type="submit"
           variant="contained"
           color="primary"
-          sx={{ alignSelf: "center", marginTop: 2 }}>
+          sx={{ alignSelf: "center", marginTop: 2, alignContent: "center" }}>
           Submit
         </Button>
       </Box>
+
+
+
+
+
     </form>
-  );
-};
 
+  )
+}
 
-export default SavingsInsightForm
+export default SavingsInsightForm;
