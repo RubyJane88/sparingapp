@@ -17,7 +17,6 @@ type Props = {
 const SavingsInsightForm: React.FC<Props> = ({ setRecommended }) => {
   const [accountType, setAccountType] = useState<string | null>(null); 
   const [accountGroups, setAccountGroups] = useState<string[]>([]);
-  const [interestRateMin, setInterestMin] = useState("");
   const [minDepositAmount, setMinDepositAmount] = useState("");
   const [maxDepositAmount, setMaxDepositAmount] = useState("");
   const [freeWithdrawal, setFreeWithdrawal] = useState("");
@@ -69,15 +68,9 @@ const SavingsInsightForm: React.FC<Props> = ({ setRecommended }) => {
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Account Type" />}
           value={accountType}
-          onChange={(event: any, newValue: string | null) => setAccountType(newValue)}
+          onChange={(_e, newValue: string | null) => setAccountType(newValue)}
         />
-        {/* <TextField
-          label="Current Interest Rate"
-          type="number"
-          variant="outlined"
-          value={interestRateMin}
-          onChange={(e) => setInterestMin(e.target.value)}
-        /> */}
+    
         <TextField
           label="Minimum Deposit Amount"
           type="number"
