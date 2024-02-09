@@ -27,7 +27,8 @@ export async function getSavingsRecommendation(payload: any) {
       'Content-Type': 'application/json'
     }
 
-  });
+  }
+  );
   return response.json();
 }
 

@@ -41,19 +41,16 @@ const SavingsInsightForm: React.FC<Props> = ({ setRecommended }) => {
     event.preventDefault();
     const payload = {
       accountType,
-      interestRateMin,
       minDepositAmount,
       maxDepositAmount,
       freeWithdrawal,
-      currentSavings
+   
     };
     try {
       const response = await getSavingsRecommendation(payload);
       if (response?.success) {
         setRecommended(response.data);
-      } else {
-        alert("No recommendations found");
-      }
+      } 
     } catch (error) {
       console.error("Error fetching savings account data:", error);
     }
@@ -74,13 +71,13 @@ const SavingsInsightForm: React.FC<Props> = ({ setRecommended }) => {
           value={accountType}
           onChange={(event: any, newValue: string | null) => setAccountType(newValue)}
         />
-        <TextField
+        {/* <TextField
           label="Current Interest Rate"
           type="number"
           variant="outlined"
           value={interestRateMin}
           onChange={(e) => setInterestMin(e.target.value)}
-        />
+        /> */}
         <TextField
           label="Minimum Deposit Amount"
           type="number"
